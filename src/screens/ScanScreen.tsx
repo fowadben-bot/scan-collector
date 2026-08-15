@@ -16,6 +16,7 @@ export default function ScanScreen() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [flash, setFlash] = useState<FlashMode>('off');
   const [mode, setMode] = useState<ScanMode>('normal');
+  const [zoom, setZoom] = useState(1);
 
   if (!permission) {
     return <View style={styles.container} />;
@@ -63,6 +64,7 @@ export default function ScanScreen() {
         style={styles.camera}
         facing={facing}
         flash={flash}
+        zoom={(zoom - 1) / 2}
         onCameraReady={() => setReady(true)}
       >
         <View style={styles.topBar}>
@@ -85,6 +87,14 @@ export default function ScanScreen() {
             <View style={[styles.corner, styles.cornerBR]} />
           </View>
           <Text style={styles.hint}>Aligne la carte dans le cadre</Text>
+        </View>
+
+        <View style={styles.zoomRow}>
+          {[1, 2, 3].map((z) => (
+            <Pressable key={z} style={[styles.zoomPill, zoom === z && styles.zoomPillActive]} onPress={() => setZoom(z)}>
+              <Text style={[styles.zoomText, zoom === z && styles.zoomTextActive]}>{z}x</Text>
+            </Pressable>
+          ))}
         </View>
 
         <View style={styles.modeToggle}>
@@ -169,6 +179,25 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
   },
+  zoomRow: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    borderRadius: 16,
+    padding: 4,
+    marginBottom: 10,
+    gap: 4,
+  },
+  zoomPill: {
+    width: 30,
+    height: 26,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  zoomPillActive: { backgroundColor: theme.colors.blue },
+  zoomText: { color: 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: '700' },
+  zoomTextActive: { color: '#fff' },
   modeToggle: {
     alignSelf: 'center',
     flexDirection: 'row',
