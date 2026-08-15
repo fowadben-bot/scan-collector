@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ScrollView, Alert, Linking } from 'react-native';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme, categoryColor } from '../theme';
@@ -41,6 +41,21 @@ export default function CardDetailScreen() {
     ]);
   };
 
+  const searchQuery = [card.title, card.set].filter(Boolean).join(' ').trim();
+  const encodedQuery = encodeURIComponent(searchQuery);
+
+  const openExternalSearch = (url: string) => {
+    Linking.openURL(url).catch(() =>
+      Alert.alert('Impossible d’ouvrir le lien', 'Vérifie ta connexion et réessaie.')
+    );
+  };
+
+  const openEbay = () =>
+    openExternalSearch(`https://www.ebay.fr/sch/i.html?_nkw=${encodedQuery}`);
+
+  const openCardmarket = () =>
+    openExternalSearch(`https://www.cardmarket.com/en/Pokemon/Products/Search?searchString=${encodedQuery}`);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
       <View style={styles.imageWrap}>
@@ -77,6 +92,24 @@ export default function CardDetailScreen() {
             <Text style={styles.notes}>{card.notes}</Text>
           </View>
         ) : null}
+
+        <View style={styles.valueSection}>
+          <Text style={styles.rowLabel}>Vérifier la valeur</Text>
+          <View style={styles.valueLinks}>
+            <Pressable style={styles.valueLinkButton} onPress={openEbay}>
+              <Ionicons name="pricetag-outline" size={16} color={theme.colors.text} />
+              <Text style={styles.valueLinkText}>eBay</Text>
+              <Ionicons name="open-outline" size={14} color={theme.colors.textMuted} />
+            </Pressable>
+            {card.category === 'manga' ? (
+              <Pressable style={styles.valueLinkButton} onPress={openCardmarket}>
+                <Ionicons name="pricetag-outline" size={16} color={theme.colors.text} />
+                <Text style={styles.valueLinkText}>Cardmarket</Text>
+                <Ionicons name="open-outline" size={14} color={theme.colors.textMuted} />
+              </Pressable>
+            ) : null}
+          </View>
+        </View>
 
         <View style={styles.actions}>
           <Pressable
@@ -135,6 +168,21 @@ const styles = StyleSheet.create({
   rowLabel: { color: theme.colors.textMuted, fontSize: 14 },
   rowValue: { color: theme.colors.text, fontSize: 14, fontWeight: '600' },
   notes: { color: theme.colors.text, fontSize: 14, marginTop: 4, lineHeight: 20 },
+  valueSection: { marginTop: 24 },
+  valueLinks: { flexDirection: 'row', gap: 10, marginTop: 10 },
+  valueLinkButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: theme.colors.card,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    paddingVertical: 12,
+    borderRadius: 14,
+  },
+  valueLinkText: { color: theme.colors.text, fontSize: 13, fontWeight: '700' },
   actions: { flexDirection: 'row', gap: 12, marginTop: 24 },
   editButton: {
     flex: 1,
