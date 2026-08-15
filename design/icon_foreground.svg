@@ -1,0 +1,21 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cardFace" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#DCE3F5"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(512 512)">
+    <rect x="-150" y="-205" width="300" height="410" rx="28" fill="url(#cardFace)" stroke="#050916" stroke-width="8"/>
+    <rect x="-126" y="-177" width="252" height="252" rx="14" fill="#0B1224"/>
+    <g stroke="#3B82F6" stroke-width="11" stroke-linecap="round" fill="none">
+      <path d="M -118 -169 L -118 -135 M -118 -169 L -84 -169"/>
+      <path d="M 118 -169 L 118 -135 M 118 -169 L 84 -169"/>
+      <path d="M -118 61 L -118 27 M -118 61 L -84 61"/>
+      <path d="M 118 61 L 118 27 M 118 61 L 84 61"/>
+    </g>
+    <path d="M0 -55 L16.5 -17 L57 -12.5 L26.5 14 L36 55 L0 33 L-36 55 L-26.5 14 L-57 -12.5 L-16.5 -17 Z" fill="#F97316"/>
+    <rect x="-110" y="118" width="220" height="14" rx="7" fill="#8B93B8"/>
+    <rect x="-110" y="148" width="140" height="11" rx="5.5" fill="#4B5578"/>
+  </g>
+</svg>

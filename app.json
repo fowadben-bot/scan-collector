@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "Scan Collector",
+    "slug": "scan-collector",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#050916",
+    "scheme": "scancollector",
+    "primaryColor": "#2563FF",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.reflexmediacom.scancollector",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Scan Collector utilise l'appareil photo pour scanner et photographier tes cartes de collection.",
+        "NSPhotoLibraryUsageDescription": "Scan Collector accède à tes photos pour importer une image de carte depuis ta galerie.",
+        "NSPhotoLibraryAddUsageDescription": "Scan Collector peut enregistrer les photos de tes cartes dans ta galerie."
+      }
+    },
+    "android": {
+      "package": "com.reflexmediacom.scancollector",
+      "adaptiveIcon": {
+        "backgroundColor": "#050916",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "READ_MEDIA_IMAGES"],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Scan Collector utilise l'appareil photo pour scanner tes cartes de collection."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Scan Collector accède à tes photos pour importer une image de carte."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 220,
+          "resizeMode": "contain",
+          "backgroundColor": "#050916"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": ""
+      }
+    }
+  }
+}
