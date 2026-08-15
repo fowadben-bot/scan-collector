@@ -1,4 +1,6 @@
 import cairosvg
+import base64
+import os
 
 W, H = 1290, 2796
 BG = "#050916"
@@ -9,6 +11,23 @@ MUTED = "#8B93B8"
 BLUE = "#2563FF"
 ORANGE = "#F97316"
 RED = "#E5342B"
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+def _b64(path):
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+PORTRAIT_B64 = _b64(os.path.join(HERE, "burst_portrait.png"))
+LANDSCAPE_B64 = _b64(os.path.join(HERE, "burst.png"))
+
+def bg_image(w, h, opacity=1.0, dark=0.0):
+    """Full-bleed portrait burst background, with an optional dark overlay for legibility."""
+    overlay = f'<rect width="{w}" height="{h}" fill="{BG}" opacity="{dark}"/>' if dark > 0 else ""
+    return f'''
+    <image href="data:image/png;base64,{PORTRAIT_B64}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice" opacity="{opacity}"/>
+    {overlay}
+    '''
 
 def status_bar():
     return f'''
@@ -73,7 +92,7 @@ def home_screen():
         tiles += card_tile(x, y, tile_w, tile_h, kind, title, sub)
 
     svg = f'''<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" xmlns="http://www.w3.org/2000/svg">
-      <rect width="{W}" height="{H}" fill="{BG}"/>
+      {bg_image(W, H, dark=0.66)}
       {status_bar()}
       <text x="100" y="270" fill="{TEXT}" font-family="Helvetica" font-size="72" font-weight="800">Scan Collector</text>
       <text x="100" y="320" fill="{MUTED}" font-family="Helvetica" font-size="34">24 cartes dans ta collection</text>
@@ -103,14 +122,7 @@ def home_screen():
 
 def scan_screen():
     svg = f'''<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="camgrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#1a2340"/>
-          <stop offset="1" stop-color="#05070f"/>
-        </linearGradient>
-      </defs>
-      <rect width="{W}" height="{H}" fill="#000"/>
-      <rect width="{W}" height="{H}" fill="url(#camgrad)"/>
+      {bg_image(W, H, dark=0.72)}
       {status_bar()}
       <rect x="{(W-1000)/2}" y="820" width="1000" height="1430" rx="36" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="6"/>
       <g stroke="#fff" stroke-width="10" stroke-linecap="round" fill="none">
@@ -138,11 +150,7 @@ def scan_screen():
 def detail_screen():
     svg = f'''<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" xmlns="http://www.w3.org/2000/svg">
       <rect width="{W}" height="{H}" fill="{BG}"/>
-      <rect x="0" y="0" width="{W}" height="1500" fill="{CARD}"/>
-      <circle cx="{W*0.5}" cy="600" r="420" fill="#C97A2E" opacity="0.9"/>
-      <path d="M {W*0.5-300} 600 Q {W*0.5} 440 {W*0.5+300} 600" stroke="#7A4413" stroke-width="14" fill="none"/>
-      <path d="M {W*0.5-300} 600 Q {W*0.5} 760 {W*0.5+300} 600" stroke="#7A4413" stroke-width="14" fill="none"/>
-      <line x1="{W*0.5}" y1="180" x2="{W*0.5}" y2="1020" stroke="#7A4413" stroke-width="14"/>
+      {bg_image(W, 1500, dark=0.35)}
       {status_bar()}
       <circle cx="160" cy="270" r="72" fill="rgba(0,0,0,0.4)"/>
       <path d="M 178 270 L 148 270 M 148 270 L 168 250 M 148 270 L 168 290" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
@@ -163,51 +171,32 @@ def detail_screen():
     </svg>'''
     return svg
 
-def detail_header_fix():
-    pass
-
 screens = {
     "screenshot_1_home.png": home_screen(),
     "screenshot_2_scan.png": scan_screen(),
     "screenshot_3_detail.png": detail_screen(),
 }
 
-import os
-os.makedirs("store/screenshots", exist_ok=True)
+os.makedirs(os.path.join(HERE, "..", "store", "screenshots"), exist_ok=True)
 for name, svg in screens.items():
-    cairosvg.svg2png(bytestring=svg.encode(), write_to=f"store/screenshots/{name}", output_width=W, output_height=H)
+    cairosvg.svg2png(bytestring=svg.encode(), write_to=os.path.join(HERE, "..", "store", "screenshots", name), output_width=W, output_height=H)
     print("done", name)
 
 def feature_graphic():
     FW, FH = 1024, 500
     svg = f'''<svg width="{FW}" height="{FH}" viewBox="0 0 {FW} {FH}" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="bg" x1="0" y1="0" x2="{FW}" y2="{FH}" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#050916"/>
-          <stop offset="1" stop-color="#0B1224"/>
-        </linearGradient>
-        <linearGradient id="blueSplat" x1="0" y1="0" x2="300" y2="{FH}" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#3B82F6"/>
-          <stop offset="1" stop-color="#1D3FB8"/>
-        </linearGradient>
-        <linearGradient id="redSplat" x1="{FW}" y1="0" x2="{FW-300}" y2="{FH}" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#FF5B4E"/>
-          <stop offset="1" stop-color="#C4231C"/>
-        </linearGradient>
-      </defs>
-      <rect width="{FW}" height="{FH}" fill="url(#bg)"/>
-      <polygon points="0,0 260,0 130,{FH} 0,{FH}" fill="url(#blueSplat)" opacity="0.85"/>
-      <polygon points="{FW},0 {FW-260},0 {FW-130},{FH} {FW},{FH}" fill="url(#redSplat)" opacity="0.85"/>
+      <image href="data:image/png;base64,{LANDSCAPE_B64}" x="0" y="0" width="{FW}" height="{FH}" preserveAspectRatio="xMidYMid slice"/>
+      <rect width="{FW}" height="{FH}" fill="{BG}" opacity="0.42"/>
       <g transform="translate(160 250)">
         <rect x="-95" y="-130" width="190" height="260" rx="20" fill="#EEF1FB" stroke="#050916" stroke-width="6"/>
         <rect x="-80" y="-112" width="160" height="160" rx="10" fill="#0B1224"/>
         <path d="M0 -35 L10.5 -11 L36 -8 L17 9 L23 35 L0 21 L-23 35 L-17 9 L-36 -8 L-10.5 -11 Z" fill="#F97316"/>
       </g>
       <text x="330" y="230" fill="#F5F7FF" font-family="Helvetica, Arial" font-size="72" font-weight="800">Scan Collector</text>
-      <text x="330" y="290" fill="#8B93B8" font-family="Helvetica, Arial" font-size="32">Scanne, catalogue et organise tes cartes</text>
-      <text x="330" y="335" fill="#8B93B8" font-family="Helvetica, Arial" font-size="32">de collection - sport, manga et plus.</text>
+      <text x="330" y="290" fill="#E7EAF7" font-family="Helvetica, Arial" font-size="32">Scanne, catalogue et organise tes cartes</text>
+      <text x="330" y="335" fill="#E7EAF7" font-family="Helvetica, Arial" font-size="32">de collection - sport, manga et plus.</text>
     </svg>'''
-    cairosvg.svg2png(bytestring=svg.encode(), write_to="store/feature_graphic.png", output_width=FW, output_height=FH)
+    cairosvg.svg2png(bytestring=svg.encode(), write_to=os.path.join(HERE, "..", "store", "feature_graphic.png"), output_width=FW, output_height=FH)
     print("done feature_graphic")
 
 feature_graphic()
