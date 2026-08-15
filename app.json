@@ -57,8 +57,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": ""
+        "projectId": "9e67aaad-f742-4dc4-9191-e47388555ef7"
       }
-    }
+    },
+    "owner": "reflex-mediacom"
   }
 }
