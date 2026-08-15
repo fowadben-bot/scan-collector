@@ -27,7 +27,7 @@ export default function CardFormScreen() {
   const [title, setTitle] = useState(editing?.title ?? '');
   const [category, setCategory] = useState<CardCategory>(editing?.category ?? 'sport');
   const [set, setSet] = useState(editing?.set ?? '');
-  const [condition, setCondition] = useState(editing?.condition ?? '');
+  const [condition, setCondition] = useState(editing?.condition ?? route.params?.condition ?? '');
   const [notes, setNotes] = useState(editing?.notes ?? '');
 
   const save = async () => {
