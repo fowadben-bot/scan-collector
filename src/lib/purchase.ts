@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   initConnection,
   endConnection,
-  getProducts,
+  fetchProducts,
   requestPurchase,
   purchaseUpdatedListener,
   purchaseErrorListener,
@@ -11,7 +11,7 @@ import {
   getAvailablePurchases,
   type Product,
   type Purchase,
-} from 'react-native-iap';
+} from 'expo-iap';
 
 export const UNLOCK_PRODUCT_ID = 'unlock_full_version';
 const UNLOCKED_STORAGE_KEY = 'scan-collector:unlocked';
@@ -41,8 +41,8 @@ export async function disconnectStore() {
 
 export async function fetchUnlockProduct(): Promise<Product | null> {
   if (!requiresUnlock) return null;
-  const products = await getProducts({ skus: [UNLOCK_PRODUCT_ID] });
-  return products?.[0] ?? null;
+  const products = await fetchProducts({ skus: [UNLOCK_PRODUCT_ID], type: 'in-app' });
+  return (products?.[0] as Product) ?? null;
 }
 
 // Vérifie auprès de Google Play si l'achat a déjà été effectué (réinstallation, nouvel appareil...).
@@ -56,7 +56,12 @@ export async function restorePurchases(): Promise<boolean> {
 
 export async function purchaseUnlock() {
   if (!requiresUnlock) return;
-  await requestPurchase({ sku: UNLOCK_PRODUCT_ID });
+  await requestPurchase({
+    request: {
+      google: { skus: [UNLOCK_PRODUCT_ID] },
+    },
+    type: 'in-app',
+  });
 }
 
 export function listenToPurchaseUpdates(onUnlocked: () => void) {

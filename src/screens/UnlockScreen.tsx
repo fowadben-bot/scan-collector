@@ -23,7 +23,7 @@ export default function UnlockScreen({ onUnlocked }: Props) {
       try {
         await connectStore();
         const product = await fetchUnlockProduct();
-        if (product?.localizedPrice) setPrice(product.localizedPrice);
+        if (product?.displayPrice) setPrice(product.displayPrice);
       } catch {
         // On garde le prix par défaut affiché si le store n'est pas joignable (ex: pas encore publié).
       }

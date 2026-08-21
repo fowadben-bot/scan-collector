@@ -14,7 +14,7 @@
       "bundleIdentifier": "com.reflexmediacom.scancollector",
       "infoPlist": {
         "NSCameraUsageDescription": "Scan Collector utilise l'appareil photo pour scanner et photographier tes cartes de collection.",
-        "NSPhotoLibraryUsageDescription": "Scan Collector acc\u00e8de \u00e0 tes photos pour importer une image de carte depuis ta galerie.",
+        "NSPhotoLibraryUsageDescription": "Scan Collector accède à tes photos pour importer une image de carte depuis ta galerie.",
         "NSPhotoLibraryAddUsageDescription": "Scan Collector peut enregistrer les photos de tes cartes dans ta galerie."
       }
     },
@@ -46,7 +46,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Scan Collector acc\u00e8de \u00e0 tes photos pour importer une image de carte."
+          "photosPermission": "Scan Collector accède à tes photos pour importer une image de carte."
         }
       ],
       [
@@ -58,12 +58,7 @@
           "backgroundColor": "#050916"
         }
       ],
-      [
-        "react-native-iap",
-        {
-          "paymentProvider": "Play Store"
-        }
-      ]
+      "expo-iap"
     ],
     "extra": {
       "eas": {
